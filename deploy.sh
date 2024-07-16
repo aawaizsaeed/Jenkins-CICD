@@ -20,6 +20,6 @@ docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}
 #sleep 10
 
 # Check the application with curl
-curl -f http://localhost:80/ || { echo "Health check failed"; exit 1; }
+wget http://localhost:80/ || { echo "Health check failed"; exit 1; }
 
 echo "Deployment successful"
