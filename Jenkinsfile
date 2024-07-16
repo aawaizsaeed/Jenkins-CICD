@@ -45,6 +45,15 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup') {
+            steps {
+                script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker rmi ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} || true"
+                    sh "docker image prune -f"
+                }
+            }
+        }
     }
 
     post {
