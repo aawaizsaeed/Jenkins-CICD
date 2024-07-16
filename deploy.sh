@@ -12,7 +12,6 @@ docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
 # Stop and remove existing container if it exists
 docker stop ${CONTAINER_NAME} || true
 docker rm ${CONTAINER_NAME} || true
-pip install --upgrade flask
 
 # Run a new container from the pulled image
 docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
