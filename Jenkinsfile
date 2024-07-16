@@ -14,7 +14,7 @@ pipeline {
                 echo 'Hello World'
             }
         }
-        stage('Build Docker Image') {
+         stage('Build Docker Image') {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
