@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REGISTRY = "localhost:5000"
+        DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
     }
 
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}")
+                    docker.build("${IMAGE_NAME}:${imageTag}")
                 }
             }
         }
