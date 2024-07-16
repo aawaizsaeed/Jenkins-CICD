@@ -27,7 +27,7 @@ pipeline {
                 }
             }
         }
-        tage('Tag Docker Image') {
+        stage('Tag Docker Image') {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
