@@ -46,6 +46,13 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Docker Container') {
+            steps {
+                script {
+                    sh './deploy.sh'
+                }
+            }
+        }
         stage('Cleanup') {
             steps {
                 script {
