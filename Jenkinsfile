@@ -27,6 +27,24 @@ pipeline {
                 }
             }
         }
+        tage('Tag Docker Image') {
+            steps {
+                script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    docker.withRegistry("http://${DOCKER_REGISTRY}") {
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                    }
+                }
+            }
+        }
     }
 
     post {
