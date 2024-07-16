@@ -24,6 +24,8 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     docker.build("${IMAGE_NAME}:${imageTag}")
+                    sh "docker images"
+                    sh "docker rmi ${IMAGE_NAME}:${imageTag}"
                 }
             }
         }
@@ -42,6 +44,14 @@ pipeline {
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
                         docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
                     }
+                }
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker image prune -f"
                 }
             }
         }
