@@ -14,7 +14,7 @@ docker stop ${CONTAINER_NAME} || true
 docker rm ${CONTAINER_NAME} || true
 
 # Run a new container from the pulled image
-docker run -d --name ${CONTAINER_NAME} -p 80:80 ${IMAGE_NAME}:${IMAGE_TAG}
+docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
 
 # Wait for a few seconds to ensure the application is up and running
 #sleep 10
