@@ -25,7 +25,6 @@ pipeline {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     docker.build("${IMAGE_NAME}:${imageTag}")
                     sh "docker images"
-                    sh "docker rmi ${IMAGE_NAME}:${imageTag}"
                 }
             }
         }
@@ -51,7 +50,9 @@ pipeline {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker rmi ${IMAGE_NAME}:${imageTag}"
                     sh "docker image prune -f"
+                    sh "docker images"
                 }
             }
         }
