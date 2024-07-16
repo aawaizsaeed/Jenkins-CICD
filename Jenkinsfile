@@ -17,11 +17,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Automatically tag the Docker image with the Jenkins build number
-                    def buildNumber = env.BUILD_NUMBER
-                    def dockerImageTag = "${REGISTRY}/${APP_NAME}:${buildNumber}"
-                    // Build the Docker image
-                    sh "docker build -t ${dockerImageTag} ."
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}")
                 }
             }
         }
