@@ -5,10 +5,16 @@ pipeline {
         stage('Load Environment Variables') {
             steps {
                 script {
-                    // Load properties from the file
+                    echo 'Loading environment variables...'
                     def props = readProperties file: 'env.properties'
+                    echo "Loaded properties: ${props}"
+
+                    // Assign loaded properties to environment variables
                     env.DOCKER_REGISTRY = props.DOCKER_REGISTRY
                     env.IMAGE_NAME = props.IMAGE_NAME
+
+                    echo "DOCKER_REGISTRY: ${env.DOCKER_REGISTRY}"
+                    echo "IMAGE_NAME: ${env.IMAGE_NAME}"
                 }
             }
         }
