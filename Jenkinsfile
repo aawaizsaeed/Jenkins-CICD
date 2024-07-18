@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
-        SLACK_CHANNEL = '# random'
+        SLACK_CHANNEL = "#random"
     }
 
     stages {
@@ -84,8 +84,9 @@ pipeline {
         always {
             script {
                 // Notify on Slack
-                slackSend channel: '${SLACK_CHANNEL}',
-                          message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: ${env.BUILD_URL}"
+                slackSend(channel: "${SLACK_CHANNEL}",
+                          color: 'good',
+                          message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: ${env.BUILD_URL}")
             }
             cleanWs()
         }
