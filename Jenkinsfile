@@ -1,29 +1,12 @@
 pipeline {
     agent any
+
     environment {
-        DOCKER_REGISTRY = ''
-        IMAGE_NAME = ''
+        DOCKER_REGISTRY = "localhost:5001"
+        IMAGE_NAME = "python-app"
     }
 
     stages {
-        stage('Load Environment Variables') {
-            steps {
-                script {
-                    // Read properties file
-                    def props = readProperties file: 'env.properties'
-
-                    // Assign loaded properties to environment variables
-                    env.DOCKER_REGISTRY = props.DOCKER_REGISTRY ?: ''
-                    env.IMAGE_NAME = props.IMAGE_NAME ?: ''
-                    env.SLACK_WEBHOOK_URL = props.SLACK_WEBHOOK_URL ?: ''
-
-                    // Print loaded variables for verification
-                    echo "DOCKER_REGISTRY: ${env.DOCKER_REGISTRY}"
-                    echo "IMAGE_NAME: ${env.IMAGE_NAME}"
-                    echo "SLACK_WEBHOOK_URL: ${env.SLACK_WEBHOOK_URL}"
-                }
-            }
-        }
         stage('Clone Code from GitHub') {
             steps {
                 git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
