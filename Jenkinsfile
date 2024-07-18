@@ -29,5 +29,10 @@ pipeline {
                 }
             }
         }
+        stage('Clone Code from GitHub') {
+            steps {
+                git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
+            }
+        }
     }
 }
