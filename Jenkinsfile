@@ -18,8 +18,7 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Check Branch Name') {
+        stage('Check Branch Name') {
             steps {
                 script {
                     if (env.BRANCH_NAME) {
