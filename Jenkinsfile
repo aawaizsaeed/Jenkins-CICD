@@ -46,6 +46,14 @@ pipeline {
                 }
             }
         }
+        stage('Pull Docker Image') {
+            steps {
+                script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+                }
+            }
+        }
         stage('Deploy Docker Container') {
             steps {
                 script {
