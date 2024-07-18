@@ -75,7 +75,12 @@ pipeline {
     }
 
     post {
-        always {
+        always {${currentBuild.currentResult} ${env.JOB_NAME} 
+            //Add channel name
+            slackSend channel: 'channelName',
+            message: "Find Status of Pipeline:- ${env.BUILD_NUMBER}"
+        }
+    }
             cleanWs()
         }
     }
