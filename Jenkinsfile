@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_REGISTRY = "localhost:5001"
-        IMAGE_NAME = "python-app"
+        
     }
 
     stages {
