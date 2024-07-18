@@ -79,7 +79,7 @@ pipeline {
             slackSend(
                 channel: '#random', 
                 color: '#439FE0', 
-                message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: ${env.BUILD_URL}", 
+                message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: ${env.BUILD_URL} ${env.BUILD_NUMBER}", 
                 teamDomain: 'DevOps Engineer'
             )
             cleanWs()
