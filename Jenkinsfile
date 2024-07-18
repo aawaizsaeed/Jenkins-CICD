@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
+        SLACK_CHANNEL = '#random'
     }
 
     stages {
@@ -28,6 +29,7 @@ pipeline {
                 }
             }
         }
+
         stage('Tag Docker Image') {
             steps {
                 script {
@@ -36,6 +38,7 @@ pipeline {
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 script {
@@ -46,6 +49,7 @@ pipeline {
                 }
             }
         }
+
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -54,6 +58,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -62,6 +67,7 @@ pipeline {
                 }
             }
         }
+
         stage('Cleanup') {
             steps {
                 script {
@@ -75,12 +81,12 @@ pipeline {
     }
 
     post {
-        always {${currentBuild.currentResult} ${env.JOB_NAME} 
-            //Add channel name
-            slackSend channel: 'channelName',
-            message: "Find Status of Pipeline:- ${env.BUILD_NUMBER}"
-        }
-    }
+        always {
+            script {
+                // Notify on Slack
+                slackSend channel: '${SLACK_CHANNEL}',
+                          message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: ${env.BUILD_URL}"
+            }
             cleanWs()
         }
     }
