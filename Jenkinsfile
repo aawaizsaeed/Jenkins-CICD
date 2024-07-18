@@ -1,20 +1,30 @@
 pipeline {
     agent any
 
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = ''
+        IMAGE_NAME = ''
+        SLACK_WEBHOOK_URL = ''
+    }
+
     stages {
         stage('Load Environment Variables') {
             steps {
                 script {
-                    echo 'Loading environment variables...'
+                    // Read properties file
                     def props = readProperties file: 'env.properties'
-                    echo "Loaded properties: ${props}"
 
                     // Assign loaded properties to environment variables
-                    env.DOCKER_REGISTRY = props.DOCKER_REGISTRY
-                    env.IMAGE_NAME = props.IMAGE_NAME
+                    env.DOCKER_REGISTRY = props.DOCKER_REGISTRY ?: ''
+                    env.IMAGE_NAME = props.IMAGE_NAME ?: ''
+                    env.SLACK_WEBHOOK_URL = props.SLACK_WEBHOOK_URL ?: ''
 
+                    // Print loaded variables for verification
                     echo "DOCKER_REGISTRY: ${env.DOCKER_REGISTRY}"
                     echo "IMAGE_NAME: ${env.IMAGE_NAME}"
+                    echo "SLACK_WEBHOOK_URL: ${env.SLACK_WEBHOOK_URL}"
                 }
             }
         }
