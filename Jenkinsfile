@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-   environment {
-        // Placeholder environment variables
-        DOCKER_REGISTRY = ''
-        IMAGE_NAME = ''
-    }
-
     stages {
         stage('Load Environment Variables') {
             steps {
