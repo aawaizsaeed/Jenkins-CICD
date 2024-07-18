@@ -1,8 +1,5 @@
 pipeline {
     agent any
-
-    agent any
-
     environment {
         DOCKER_REGISTRY = ''
         IMAGE_NAME = ''
