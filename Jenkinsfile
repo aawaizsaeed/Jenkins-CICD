@@ -19,4 +19,16 @@ pipeline {
             }
         }
     }
+    stage('Check Branch Name') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME) {
+                        echo "Current branch is: ${env.BRANCH_NAME}"
+                    } else {
+                        echo "BRANCH_NAME is not set."
+                    }
+                }
+            }
+        }
+    }
 }
