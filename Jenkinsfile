@@ -3,7 +3,6 @@ pipeline {
     environment {
         DOCKER_REGISTRY = ''
         IMAGE_NAME = ''
-        SLACK_WEBHOOK_URL = ''
     }
 
     stages {
