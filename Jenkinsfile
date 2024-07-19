@@ -94,6 +94,7 @@ pipeline {
             steps {
                 script {
                     sh 'ls -l /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp'
+                    sh 'ls -l /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv'
                     sh 'cat /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv'
                 }
             }
@@ -104,7 +105,7 @@ pipeline {
                     slackUploadFile(
                         channel: '${env.SLACK_CHANNEL}', 
                         credentialId: 'slack-bot-token', 
-                        filePath: 'build_info.csv', 
+                        filePath: '/var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv', 
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
