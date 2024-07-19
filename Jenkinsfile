@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_REGISTRY = "localhost:5001"
-        IMAGE_NAME = "python-app"
-        FILE_PATH = 'hello.txt'
-        SLACK_CHANNEL = 'C0688TUUDFX'
-    }
-
     stages {
         stage('Clone Code from GitHub') {
             steps {
