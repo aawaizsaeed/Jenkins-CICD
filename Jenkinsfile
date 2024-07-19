@@ -89,6 +89,19 @@ pipeline {
                 }
             }
         }
+        stage('Upload CSV to Slack') {
+            steps {
+                script {
+                    def csvFilePath = 'build_info.csv'
+                    def slackApiToken = "${env.slack-bot-token}"
+                    def slackChannel = "${env.SLACK_CHANNEL}"
+                    
+                    sh """
+                        curl -F file=@${csvFilePath} -F "initial_comment=Build info CSV file" -F channels=${slackChannel} -H "Authorization: Bearer ${slack-bot-token}" https://slack.com/api/files.upload
+                    """
+                }
+            }
+        }
     }
 
     post {
