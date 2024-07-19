@@ -5,6 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
         SLACK_CHANNEL = '#random'
+        FILE_PATH = 'build_info.csv'
     }
 
     stages {
@@ -73,30 +74,35 @@ pipeline {
                 }
             }
         }
-        stage('Update CSV') {
+        stage('Setup') {
             steps {
                 script {
-                    def commitId = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    def currentTime = sh(script: 'date +"%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
-                    def csvFilePath = 'build_info.csv'
-                    def branch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    
-                    sh """
-                        if [ ! -f ${csvFilePath} ]; then
-                            echo "Time,Branch,Commit ID,Build Number" > ${csvFilePath}
+                    // Create the CSV file with headers if it doesn't exist
+                    sh '''
+                        if [ ! -f ${FILE_PATH} ]; then
+                            echo "Time,Name,Branch,Commit ID,Build Number" > ${FILE_PATH}
                         fi
-                        echo "Time = ${currentTime}, Branch = ${branch},Commit = ${commitId}, Build = ${env.BUILD_NUMBER}" >> ${csvFilePath}
-                    """
+                    '''
                 }
             }
         }
-       
-        stage('Verify File Creation') {
+
+        stage('Update CSV') {
             steps {
                 script {
-                    sh 'ls -l /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp'
-                    sh 'ls -l /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv'
-                    sh 'cat /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv'
+                    // Append build information to the CSV file
+                    sh '''
+                        echo "$(date +'%Y-%m-%d %H:%M:%S'),${env.JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${FILE_PATH}
+                    '''
+                }
+            }
+        }
+
+        stage('Print CSV') {
+            steps {
+                script {
+                    // Print the CSV file to the console for verification
+                    sh 'cat ${FILE_PATH}'
                 }
             }
         }
