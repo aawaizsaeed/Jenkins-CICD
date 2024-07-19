@@ -83,7 +83,7 @@ pipeline {
         stage('Create Text File') {
             steps {
                 script {
-                    sh '
+                    sh '''
                         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
                         BRANCH=$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=$(git rev-parse HEAD)
@@ -92,7 +92,7 @@ pipeline {
                         echo "Branch: ${BRANCH}" >> ${FILE_PATH}
                         echo "Commit ID: ${COMMIT_ID}" >> ${FILE_PATH}
                         echo "Build Number: ${BUILD_NUMBER}" >> ${FILE_PATH}
-                    '
+                    '''
                 }
             }
         }
