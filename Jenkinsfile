@@ -111,6 +111,7 @@ pipeline {
                 color: '#439FE0', 
                 message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
                 teamDomain: 'DevOps Engineer'
+                token: SLACK_API_TOKEN
             )
             cleanWs()
         }
