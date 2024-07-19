@@ -4,6 +4,8 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
+        FILE_PATH = 'hello.txt'
+        SLACK_CHANNEL = 'C0688TUUDFX'
     }
 
     stages {
@@ -12,7 +14,7 @@ pipeline {
                 git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
             }
         }
-
+        
         stage('Hello') {
             steps {
                 echo 'Hello World'
@@ -28,6 +30,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Tag Docker Image') {
             steps {
                 script {
@@ -36,6 +39,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Push Docker Image') {
             steps {
                 script {
@@ -46,6 +50,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -54,6 +59,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -62,6 +68,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Cleanup') {
             steps {
                 script {
@@ -72,12 +79,42 @@ pipeline {
                 }
             }
         }
+        
+        stage('Create Text File') {
+            steps {
+                script {
+                    sh '''
+                        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
+                        BRANCH=$(git rev-parse --abbrev-ref HEAD)
+                        COMMIT_ID=$(git rev-parse HEAD)
+                        echo "Pipeline Name: ${JOB_NAME}" > ${FILE_PATH}
+                        echo "Time: ${CURRENT_TIME}" >> ${FILE_PATH}
+                        echo "Branch: ${BRANCH}" >> ${FILE_PATH}
+                        echo "Commit ID: ${COMMIT_ID}" >> ${FILE_PATH}
+                        echo "Build Number: ${BUILD_NUMBER}" >> ${FILE_PATH}
+                    '''
+                }
+            }
+        }
+
+        stage('Upload txt to Slack') {
+            steps {
+                script {
+                    slackUploadFile(
+                        channel: "${SLACK_CHANNEL}", 
+                        credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
+                        filePath: "${FILE_PATH}",
+                        initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
+                    )
+                }
+            }
+        }
     }
 
     post {
         always {
             slackSend(
-                channel: '#random', 
+                channel: "${env.SLACK_CHANNEL}", 
                 color: '#439FE0', 
                 message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
                 teamDomain: 'DevOps Engineer'
