@@ -90,6 +90,14 @@ pipeline {
                 }
             }
         }
+        stage('Verify File Creation') {
+            steps {
+                script {
+                    sh 'ls -l /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp'
+                    sh 'cat /var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv'
+                }
+            }
+        }
         stage('Upload CSV to Slack') {
             steps {
                 script {
