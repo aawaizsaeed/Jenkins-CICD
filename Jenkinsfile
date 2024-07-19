@@ -5,7 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
         SLACK_CHANNEL = '#random'
-        FILE_PATH = 'build_info.csv'
+        FILE_PATH = 'hello.txt'
     }
 
     stages {
@@ -80,36 +80,24 @@ pipeline {
             }
         }
         
-        stage('Setup') {
+        stage('Create Text File') {
             steps {
                 script {
-                    // Create the CSV file with headers if it doesn't exist
-                    sh '''
-                        #!/bin/bash
-                        if [ ! -f ${FILE_PATH} ]; then
-                            echo "Time,Name,Branch,Commit ID,Build Number" > ${FILE_PATH}
-                        fi
-                    '''
-                }
-            }
-        }
-
-        stage('Update CSV') {
-            steps {
-                script {
-                    // Append build information to the CSV file
-                    sh '''
-                        #!/bin/bash
-                        # Capture current date and time
+                    sh '
                         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
-                        # Append the build info to the CSV file
-                        echo "${CURRENT_TIME},${JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${BUILD_NUMBER}" >> ${FILE_PATH}
-                    '''
+                        BRANCH=$(git rev-parse --abbrev-ref HEAD)
+                        COMMIT_ID=$(git rev-parse HEAD)
+                        echo "Pipeline Name: ${JOB_NAME}" > ${FILE_PATH}
+                        echo "Time: ${CURRENT_TIME}" >> ${FILE_PATH}
+                        echo "Branch: ${BRANCH}" >> ${FILE_PATH}
+                        echo "Commit ID: ${COMMIT_ID}" >> ${FILE_PATH}
+                        echo "Build Number: ${BUILD_NUMBER}" >> ${FILE_PATH}
+                    '
                 }
             }
         }
 
-        stage('Upload CSV to Slack') {
+        stage('Upload txt to Slack') {
             steps {
                 script {
                     slackUploadFile(
