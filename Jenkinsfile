@@ -14,7 +14,7 @@ pipeline {
                 git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
             }
         }
-
+        
         stage('Hello') {
             steps {
                 echo 'Hello World'
@@ -30,6 +30,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Tag Docker Image') {
             steps {
                 script {
@@ -38,6 +39,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Push Docker Image') {
             steps {
                 script {
@@ -48,6 +50,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Pull Docker Image') {
             steps {
                 script {
@@ -56,6 +59,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -64,6 +68,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Cleanup') {
             steps {
                 script {
@@ -74,6 +79,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Setup') {
             steps {
                 script {
@@ -106,23 +112,10 @@ pipeline {
         stage('Upload CSV to Slack') {
             steps {
                 script {
-                    // Upload the CSV file to Slack
                     slackUploadFile(
-                        channel: '#your-channel', // Replace with your Slack channel
+                        channel: "${env.SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
                         filePath: "${FILE_PATH}",
-                        initialComment: 'Here is the build information CSV file'
-                    )
-                }
-            }
-        }
-        stage('Upload CSV to Slack') {
-            steps {
-                script {
-                    slackUploadFile(
-                        channel: '${env.SLACK_CHANNEL}', 
-                        credentialId: 'slack-bot-token', 
-                        filePath: '/var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/build_info.csv', 
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
@@ -133,7 +126,7 @@ pipeline {
     post {
         always {
             slackSend(
-                channel: '#random', 
+                channel: "${env.SLACK_CHANNEL}", 
                 color: '#439FE0', 
                 message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
                 teamDomain: 'DevOps Engineer'
