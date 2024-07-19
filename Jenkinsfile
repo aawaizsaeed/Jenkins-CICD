@@ -38,7 +38,7 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}").push()
                     }
                 }
             }
