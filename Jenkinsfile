@@ -73,23 +73,21 @@ pipeline {
                 }
             }
         }
-        stage('Update CSV') {
+        stage('Create and Verify CSV File') {
             steps {
                 script {
-                    def commitId = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    def currentTime = sh(script: 'date +"%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
-                    def csvFilePath = 'build_info.csv'
-                    def branch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                    
+                    def filePath = 'build_info.csv'
+            // Create and write to the file
                     sh """
-                        if [ ! -f ${csvFilePath} ]; then
-                            echo "Time,Branch,Commit ID,Build Number" > ${csvFilePath}
-                        fi
-                        echo "Time = ${currentTime}, Branch = ${branch},Commit = ${commitId}, Build = ${env.BUILD_NUMBER}" >> ${csvFilePath}
+                    echo 'Time,Branch,Commit ID,Build Number' > ${filePath}
+                    echo '$(date +%Y-%m-%d\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}' >> ${filePath}
+                    ls -l ${filePath}
+                    cat ${filePath}
                     """
                 }
             }
         }
+       
         stage('Verify File Creation') {
             steps {
                 script {
