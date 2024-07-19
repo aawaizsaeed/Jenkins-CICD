@@ -79,6 +79,7 @@ pipeline {
                 script {
                     // Create the CSV file with headers if it doesn't exist
                     sh '''
+                        #!/bin/bash
                         if [ ! -f ${FILE_PATH} ]; then
                             echo "Time,Name,Branch,Commit ID,Build Number" > ${FILE_PATH}
                         fi
@@ -92,6 +93,7 @@ pipeline {
                 script {
                     // Append build information to the CSV file
                     sh '''
+                        #!/bin/bash
                         echo "$(date +'%Y-%m-%d %H:%M:%S'),${env.JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${FILE_PATH}
                     '''
                 }
@@ -102,7 +104,10 @@ pipeline {
             steps {
                 script {
                     // Print the CSV file to the console for verification
-                    sh 'cat ${FILE_PATH}'
+                    sh '''
+                        #!/bin/bash
+                        cat ${FILE_PATH}
+                    '''
                 }
             }
         }
