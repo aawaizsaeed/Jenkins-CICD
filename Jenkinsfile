@@ -74,15 +74,16 @@ pipeline {
                 }
             }
         }
-        stage('Setup') {
+        stage('Create CSV File') {
             steps {
                 script {
-                    // Create the CSV file with headers if it doesn't exist
+                    // Create and verify the CSV file
                     sh '''
                         #!/bin/bash
-                        if [ ! -f ${FILE_PATH} ]; then
-                            echo "Time,Name,Branch,Commit ID,Build Number" > ${FILE_PATH}
-                        fi
+                        echo "Time,Branch,Commit ID,Build Number" > ${WORKSPACE}/${FILE_PATH}
+                        echo "$(date +%Y-%m-%d\\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${WORKSPACE}/${FILE_PATH}
+                        ls -l ${WORKSPACE}/${FILE_PATH}
+                        cat ${WORKSPACE}/${FILE_PATH}
                     '''
                 }
             }
@@ -95,18 +96,6 @@ pipeline {
                     sh '''
                         #!/bin/bash
                         echo "$(date +'%Y-%m-%d %H:%M:%S'),${env.JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${FILE_PATH}
-                    '''
-                }
-            }
-        }
-
-        stage('Print CSV') {
-            steps {
-                script {
-                    // Print the CSV file to the console for verification
-                    sh '''
-                        #!/bin/bash
-                        cat ${FILE_PATH}
                     '''
                 }
             }
