@@ -80,10 +80,10 @@ pipeline {
                     def filePath = 'build_info.csv'
             // Create and write to the file
                     sh """
-                    echo 'Time,Branch,Commit ID,Build Number' > ${filePath}
+                    echo 'Time,Branch,Commit ID,Build Number' > ${FILE_PATH}
                     echo '$(date +%Y-%m-%d\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}' >> ${filePath}
-                    ls -l ${filePath}
-                    cat ${filePath}
+                    ls -l ${FILE_PATH}
+                    cat ${FILE_PATH}
                     """
                 }
             }
