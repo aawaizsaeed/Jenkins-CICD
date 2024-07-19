@@ -26,23 +26,23 @@ pipeline {
             }
         }
         
-        stage('Tag Docker Image') {
-            steps {
-                script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
-                }
-            }
-        }
-        
         stage('Push Docker Image') {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
+                    def versionTag = "${env.BUILD_NUMBER}" // Or use any versioning scheme you prefer
+
+            // Tag the image with both `latest` and version-specific tags
+                    sh """
+                        docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}
+                        docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${versionTag}
+                    """
+
+            // Push both tags to the registry
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
-                    }
-                }
+                         docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${versionTag}").push()
+                 }
             }
         }
         
