@@ -101,7 +101,7 @@ pipeline {
             steps {
                 script {
                     slackUploadFile(
-                        channel: "${env.SLACK_CHANNEL}", 
+                        channel: "${SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
                         filePath: "${FILE_PATH}",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
