@@ -84,7 +84,7 @@ pipeline {
                         if [ ! -f ${csvFilePath} ]; then
                             echo "Time,Branch,Commit ID,Build Number" > ${csvFilePath}
                         fi
-                        echo "${currentTime},${branch},${commitId},${env.BUILD_NUMBER}" >> ${csvFilePath}
+                        echo "Time = ${currentTime}, Branch = ${branch},Commit = ${commitId}, Build = ${env.BUILD_NUMBER}" >> ${csvFilePath}
                     """
                 }
             }
