@@ -74,6 +74,23 @@ pipeline {
                 }
             }
         }
+        stage('Update CSV') {
+            steps {
+                script {
+                    def commitId = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    def currentTime = sh(script: 'date +"%Y-%m-%d %H:%M:%S"', returnStdout: true).trim()
+                    def csvFilePath = 'build_info.csv'
+                    def branch = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    
+                    sh """
+                        if [ ! -f ${csvFilePath} ]; then
+                            echo "Time,Branch,Commit ID,Build Number" > ${csvFilePath}
+                        fi
+                        echo "Time = ${currentTime}, Branch = ${branch},Commit = ${commitId}, Build = ${env.BUILD_NUMBER}" >> ${csvFilePath}
+                    """
+                }
+            }
+        }
         stage('Create CSV File') {
             steps {
                 script {
