@@ -90,19 +90,6 @@ pipeline {
                 }
             }
         }
-        stage('Create CSV File') {
-            steps {
-                script {
-                    // Create and verify the CSV file
-                    sh """
-                        echo 'Time,Branch,Commit ID,Build Number' > ${FILE_PATH}
-                        echo '$(date +%Y-%m-%d\\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}' >> ${FILE_PATH}
-                        ls -l ${FILE_PATH}
-                        cat ${FILE_PATH}
-                    """
-                }
-            }
-        }
        
         stage('Verify File Creation') {
             steps {
