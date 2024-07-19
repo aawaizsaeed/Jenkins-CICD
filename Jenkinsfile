@@ -4,8 +4,6 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
-        SLACK_CHANNEL = "#random"
-        SLACK_API_TOKEN = credentials('slack-bot-token')
     }
 
     stages {
@@ -99,7 +97,7 @@ pipeline {
                     def slackChannel = "${env.SLACK_CHANNEL}"
                     
                     sh """
-                        curl -F file=@${csvFilePath} -F "initial_comment=Build info CSV file" -F channels=${slackChannel} -H "Authorization: Bearer ${slack-bot-token}" https://slack.com/api/files.upload
+                        curl -F file=@${csvFilePath} -F "initial_comment=Build info CSV file" -F channels=${slackChannel} -H "Authorization: Bearer ${slack-api-token}" https://slack.com/api/files.upload
                     """
                 }
             }
