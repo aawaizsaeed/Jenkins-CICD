@@ -74,16 +74,15 @@ pipeline {
                 }
             }
         }
-        stage('Create CSV File') {
+        stage('Setup') {
             steps {
                 script {
-                    // Create and verify the CSV file
+                    // Create the CSV file with headers if it doesn't exist
                     sh '''
                         #!/bin/bash
-                        echo "Time,Branch,Commit ID,Build Number" > ${WORKSPACE}/${FILE_PATH}
-                        echo "$(date +%Y-%m-%d\\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${WORKSPACE}/${FILE_PATH}
-                        ls -l ${WORKSPACE}/${FILE_PATH}
-                        cat ${WORKSPACE}/${FILE_PATH}
+                        if [ ! -f ${FILE_PATH} ]; then
+                            echo "Time,Name,Branch,Commit ID,Build Number" > ${FILE_PATH}
+                        fi
                     '''
                 }
             }
@@ -95,8 +94,25 @@ pipeline {
                     // Append build information to the CSV file
                     sh '''
                         #!/bin/bash
-                        echo "$(date +'%Y-%m-%d %H:%M:%S'),${env.JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}" >> ${FILE_PATH}
+                        # Capture current date and time
+                        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
+                        # Append the build info to the CSV file
+                        echo "${CURRENT_TIME},${JOB_NAME},$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${BUILD_NUMBER}" >> ${FILE_PATH}
                     '''
+                }
+            }
+        }
+
+        stage('Upload CSV to Slack') {
+            steps {
+                script {
+                    // Upload the CSV file to Slack
+                    slackUploadFile(
+                        channel: '#your-channel', // Replace with your Slack channel
+                        credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
+                        filePath: "${FILE_PATH}",
+                        initialComment: 'Here is the build information CSV file'
+                    )
                 }
             }
         }
