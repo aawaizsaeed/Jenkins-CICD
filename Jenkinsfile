@@ -4,6 +4,8 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
+        SLACK_CHANNEL = "#random"
+        SLACK_API_TOKEN = credentials('slack-bot-token')
     }
 
     stages {
