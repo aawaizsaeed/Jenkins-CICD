@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_REGISTRY = "localhost:5001" // Your local Docker registry
-        IMAGE_NAME = "python-app" // Your Docker image name
-        SLACK_CHANNEL = '#random' // Your Slack channel
-        FILE_PATH = 'build_info.txt' // Path for the text file
-    }
-
     stages {
         stage('Clone Code from GitHub') {
             steps {
