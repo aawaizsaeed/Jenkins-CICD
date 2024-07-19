@@ -5,7 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
         FILE_PATH = 'hello.txt'
-        SLACK_CHENNAL = 'C0688TUUDFX'
+        SLACK_CHANNEL = 'C0688TUUDFX'
     }
 
     stages {
