@@ -74,16 +74,15 @@ pipeline {
                 }
             }
         }
-        stage('Create and Verify CSV File') {
+        stage('Create CSV File') {
             steps {
                 script {
-                    def filePath = 'build_info.csv'
-            // Create and write to the file
+                    // Create and verify the CSV file
                     sh """
-                    echo 'Time,Branch,Commit ID,Build Number' > ${FILE_PATH}
-                    echo '$(date +%Y-%m-%d\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}' >> ${filePath}
-                    ls -l ${FILE_PATH}
-                    cat ${FILE_PATH}
+                        echo 'Time,Branch,Commit ID,Build Number' > ${FILE_PATH}
+                        echo '$(date +%Y-%m-%d\\ %H:%M:%S),$(git rev-parse --abbrev-ref HEAD),$(git rev-parse HEAD),${env.BUILD_NUMBER}' >> ${FILE_PATH}
+                        ls -l ${FILE_PATH}
+                        cat ${FILE_PATH}
                     """
                 }
             }
