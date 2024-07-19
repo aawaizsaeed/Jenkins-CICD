@@ -5,6 +5,7 @@ pipeline {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
         SLACK_CHANNEL = '#random'
+        FILE_PATH = 'build_info.csv'
     }
 
     stages {
