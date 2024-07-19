@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}"
                 }
             }
         }
