@@ -1,7 +1,12 @@
 pipeline {
     agent any
 
-    
+    environment {
+        DOCKER_REGISTRY = "localhost:5001" // Your local Docker registry
+        IMAGE_NAME = "python-app" // Your Docker image name
+        SLACK_CHANNEL = '#random' // Your Slack channel
+        FILE_PATH = 'build_info.txt' // Path for the text file
+    }
 
     stages {
         stage('Clone Code from GitHub') {
@@ -32,17 +37,18 @@ pipeline {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     def versionTag = "${env.BUILD_NUMBER}" // Or use any versioning scheme you prefer
 
-            // Tag the image with both `latest` and version-specific tags
+                    // Tag the image with both `latest` and version-specific tags
                     sh """
                         docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}
                         docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${versionTag}
                     """
 
-            // Push both tags to the registry
+                    // Push both tags to the registry
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                         docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
                         docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${versionTag}").push()
-                 }
+                    }
+                }
             }
         }
         
