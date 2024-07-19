@@ -1,6 +1,8 @@
 pipeline {
     agent any
 
+    
+
     stages {
         stage('Clone Code from GitHub') {
             steps {
@@ -28,7 +30,7 @@ pipeline {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
                 }
             }
         }
@@ -38,7 +40,7 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
                     }
                 }
             }
