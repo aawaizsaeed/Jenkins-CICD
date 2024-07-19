@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_REGISTRY = "localhost:5001"
         IMAGE_NAME = "python-app"
-        SLACK_CHANNEL = '#random'
         FILE_PATH = 'hello.txt'
     }
 
@@ -101,7 +100,7 @@ pipeline {
             steps {
                 script {
                     slackUploadFile(
-                        channel: "${SLACK_CHANNEL}", 
+                        channel: "${env.SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
                         filePath: "${FILE_PATH}",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
