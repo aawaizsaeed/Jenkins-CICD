@@ -97,7 +97,7 @@ pipeline {
                     def slackChannel = "${env.SLACK_CHANNEL}"
                     
                     sh """
-                        curl -F file=@${csvFilePath} -F "initial_comment=Build info CSV file" -F channels=${slackChannel} -H "Authorization: Bearer ${slack-api-token}" https://slack.com/api/files.upload
+                        curl -F file=@${csvFilePath} -F "initial_comment=Build info CSV file" -F channels=${slackChannel} -H "Authorization: Bearer ${slack-bot-token}" https://slack.com/api/files.upload
                     """
                 }
             }
@@ -111,7 +111,6 @@ pipeline {
                 color: '#439FE0', 
                 message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
                 teamDomain: 'DevOps Engineer'
-                token: SLACK_API_TOKEN
             )
             cleanWs()
         }
