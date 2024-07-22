@@ -78,7 +78,7 @@ pipeline {
                 script {
                     sh '''
                         # Define the CSV file path
-                        FILE_PATH="${WORKSPACE}/build_info.csv"
+                        FILE_PATH="${FILE_PATH_CSV}"
 
                         # Check if the CSV file exists
                         if [ ! -f ${FILE_PATH} ]; then
