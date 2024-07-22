@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -74,30 +73,40 @@ pipeline {
             }
         }
         
-        stage('Create Text File') {
+        stage('Create CSV File') {
             steps {
                 script {
                     sh '''
+                        # Define the CSV file path
+                        FILE_PATH="${WORKSPACE}/build_info.csv"
+
+                        # Check if the CSV file exists
+                        if [ ! -f ${FILE_PATH} ]; then
+                            # Create the CSV file with headers
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${FILE_PATH}
+                        fi
+
+                        # Capture current date and time
                         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
+
+                        # Capture branch and commit ID
                         BRANCH=$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=$(git rev-parse HEAD)
-                        echo "Pipeline Name: ${JOB_NAME}" > ${FILE_PATH}
-                        echo "Time: ${CURRENT_TIME}" >> ${FILE_PATH}
-                        echo "Branch: ${BRANCH}" >> ${FILE_PATH}
-                        echo "Commit ID: ${COMMIT_ID}" >> ${FILE_PATH}
-                        echo "Build Number: ${BUILD_NUMBER}" >> ${FILE_PATH}
+
+                        # Append the build information to the CSV file
+                        echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${FILE_PATH}
                     '''
                 }
             }
         }
 
-        stage('Upload txt to Slack') {
+        stage('Upload CSV to Slack') {
             steps {
                 script {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
-                        filePath: "${FILE_PATH}",
+                        filePath: "${FILE_PATH_CSV}",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
