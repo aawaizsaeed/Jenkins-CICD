@@ -75,32 +75,29 @@ pipeline {
         
         stage('Create CSV File') {
             steps {
-                script {
-                    sh '''
+                  script {
+                       def csvDir = "/var/jenkins_home/builds/csv"
+                       def filePath = "${csvDir}/build_info.csv"
+/var/jenkins_home/builds/csv/
+            // Create directory if it doesn't exist
+            sh "mkdir -p ${csvDir}"
 
-                        mkdir -p ${CSV_DIR}
-                        # Define the CSV file path
-                        FILE_PATH="${FILE_PATH_CSV}"
-
-                        # Check if the CSV file exists
-                        if [ ! -f ${FILE_PATH} ]; then
-                            # Create the CSV file with headers
-                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${FILE_PATH}
+            // Create or update the CSV file
+                    sh """
+                        if [ ! -f ${filePath} ]; then
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
                         fi
-
-                        # Capture current date and time
                         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
-
-                        # Capture branch and commit ID
                         BRANCH=$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=$(git rev-parse HEAD)
 
-                        # Append the build information to the CSV file
-                        echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${FILE_PATH}
-                    '''
+                # Append the build information to the CSV file
+                        echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${filePath}
+                    """
                 }
             }
         }
+
 
         stage('Upload CSV to Slack') {
             steps {
