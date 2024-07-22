@@ -77,10 +77,10 @@ pipeline {
             steps {
                 script {
                     def csvDir = "${WORKSPACE}/csv"
-                    def filePath = "${csvDir}/build_info.csv"
+                    def filePath = "${CSV_DIR}/build_info.csv"
 
                     // Create directory if it doesn't exist
-                    sh "mkdir -p ${csvDir}"
+                    sh "mkdir -p ${CSV_DIR}"
 
                     // Create or update the CSV file
                     sh """
