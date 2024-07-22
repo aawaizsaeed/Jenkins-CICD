@@ -75,14 +75,14 @@ pipeline {
         
         stage('Create CSV File') {
             steps {
-                  script {
-                       def csvDir = "var/jenkins_home/builds/csv"
-                       def filePath = "${csvDir}/build_info.csv"
-/var/jenkins_home/builds/csv/
-            // Create directory if it doesn't exist
-            sh "mkdir -p ${csvDir}"
+                script {
+                    def csvDir = "${WORKSPACE}/csv"
+                    def filePath = "${csvDir}/build_info.csv"
 
-            // Create or update the CSV file
+                    // Create directory if it doesn't exist
+                    sh "mkdir -p ${csvDir}"
+
+                    // Create or update the CSV file
                     sh """
                         if [ ! -f ${filePath} ]; then
                             echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
@@ -91,13 +91,12 @@ pipeline {
                         BRANCH=$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=$(git rev-parse HEAD)
 
-                # Append the build information to the CSV file
+                        # Append the build information to the CSV file
                         echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${filePath}
                     """
                 }
             }
         }
-
 
         stage('Upload CSV to Slack') {
             steps {
@@ -105,7 +104,7 @@ pipeline {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
-                        filePath: "${FILE_PATH_CSV}",
+                        filePath: "${WORKSPACE}/csv/build_info.csv",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
@@ -118,10 +117,4 @@ pipeline {
             slackSend(
                 channel: "${env.SLACK_CHANNEL}", 
                 color: '#439FE0', 
-                message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
-                teamDomain: 'DevOps Engineer'
-            )
-            cleanWs()
-        }
-    }
-}
+                message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipe
