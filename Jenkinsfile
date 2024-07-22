@@ -77,6 +77,8 @@ pipeline {
             steps {
                 script {
                     sh '''
+
+                        mkdir -p ${CSV_DIR}
                         # Define the CSV file path
                         FILE_PATH="${FILE_PATH_CSV}"
 
