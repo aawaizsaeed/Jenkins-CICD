@@ -85,6 +85,7 @@ pipeline {
                     // Create directory if it doesn't exist
                     sh """ 
                     mkdir -p ${csvDir}
+                    ls -l ${csvDir} 
                     """
 
                     // Create or update the CSV file
