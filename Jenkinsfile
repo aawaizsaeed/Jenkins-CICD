@@ -92,13 +92,13 @@ pipeline {
                     sh '''
                         #!/bin/bash
                         if [ ! -f "${filePath}" ]; then
-                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${filePath}"
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${FILE_PATH_CSV}"
                         fi
                         CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
                         BRANCH=\$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=\$(git rev-parse HEAD)
                         # Append the build information to the CSV file
-                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${filePath}"
+                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${FILE_PATH_CSV}"
                     '''
                 }
             }
