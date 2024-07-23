@@ -109,7 +109,7 @@ pipeline {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
-                        filePath: "${env.FILE_PATH_CSV",
+                        filePath: "${env.FILE_PATH_CSV}",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
