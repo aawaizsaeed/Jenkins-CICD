@@ -85,7 +85,7 @@ pipeline {
                     // Create or update the CSV file
                     sh """
                         if [ ! -f ${filePath} ]; then
-                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number"
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
                         fi
                         CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
                         BRANCH=$(git rev-parse --abbrev-ref HEAD)
