@@ -98,7 +98,7 @@ pipeline {
                         COMMIT_ID=$(git rev-parse HEAD)
 
                         # Append the build information to the CSV file
-                        echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> "${filePath}"
+                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${filePath}" >> "${filePath}"
                     '''
                 }
             }
