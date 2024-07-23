@@ -76,12 +76,12 @@ pipeline {
         stage('Create CSV File') {
             steps {
                 script {
-                    def csvDir = "/var/jenkins_home/builds/csv"
-                    def filePath = "${csvDir}/build_info.csv"
+                    def csvDir = "${env.CSV_DIR}"
+                    def filePath = "${env.FILE_PATH_CSV}"
 
                     // Create directory if it doesn't exist
                     sh """ 
-                    mkdir -p ${filePath}
+                    mkdir -p ${csvDir}
                     """
 
                     // Create or update the CSV file
