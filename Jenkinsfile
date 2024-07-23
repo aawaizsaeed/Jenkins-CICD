@@ -79,6 +79,9 @@ pipeline {
                     def csvDir = "${env.CSV_DIR}"
                     def filePath = "${env.FILE_PATH_CSV}"
 
+                    echo "CSV Directory: ${csvDir}"
+                    echo "File Path: ${filePath}"
+
                     // Create directory if it doesn't exist
                     sh """ 
                     mkdir -p ${csvDir}
