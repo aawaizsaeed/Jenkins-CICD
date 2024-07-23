@@ -76,7 +76,7 @@ pipeline {
         stage('Create CSV File') {
             steps {
                 script {
-                    def csvDir = "$var/jenkins_home/builds/csv"
+                    def csvDir = "/var/jenkins_home/builds/csv"
                     def filePath = "${csvDir}/build_info.csv"
 
                     // Create directory if it doesn't exist
