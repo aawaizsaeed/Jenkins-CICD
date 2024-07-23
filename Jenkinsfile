@@ -80,7 +80,9 @@ pipeline {
                     def filePath = "${csvDir}/build_info.csv"
 
                     // Create directory if it doesn't exist
-                    sh "mkdir -p ${csvDir}"
+                    sh """ 
+                    mkdir -p ${csvDir}
+                    """
 
                     // Create or update the CSV file
                     sh """
