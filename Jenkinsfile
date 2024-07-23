@@ -85,7 +85,7 @@ pipeline {
                     """
 
                     // Create or update the CSV file
-                    sh """
+                    sh '''
                         if [ ! -f ${filePath} ]; then
                             echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
                         fi
@@ -95,7 +95,7 @@ pipeline {
 
                         # Append the build information to the CSV file
                         echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${filePath}
-                    """
+                    '''
                 }
             }
         }
