@@ -91,7 +91,7 @@ pipeline {
                     // Create or update the CSV file
                     sh '''
                         #!/bin/bash
-                        if [ ! -f "${filePath}" ]; then
+                        if [ ! -f "${FILE_PATH_CSV}" ]; then
                             echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${FILE_PATH_CSV}"
                         fi
                         CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
