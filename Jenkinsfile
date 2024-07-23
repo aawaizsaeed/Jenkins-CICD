@@ -91,14 +91,16 @@ pipeline {
                     // Create or update the CSV file
                     sh '''
                         #!/bin/bash
-                        if [ ! -f "${filePath}" ]; then
-                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${CSV_FILE}"
+                        if [ ! -f "${env.FILE_PATH_CSV}" ]; then
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${env.FILE_PATH_CSV}"
                         fi
                         CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
                         BRANCH=\$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=\$(git rev-parse HEAD)
                         # Append the build information to the CSV file
-                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${CSV_FILE}"
+                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${env.FILE_PATH_CSV}"
+                        ls -l "${CSV_DIR}"  # List contents to confirm the file creation
+                        cat "${FILE_PATH_CSV}"  # Output file content for verification
                     '''
                 }
             }
