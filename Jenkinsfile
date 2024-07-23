@@ -93,10 +93,9 @@ pipeline {
                         if [ ! -f ${filePath} ]; then
                             echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${filePath}"
                         fi
-                        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
-                        BRANCH=$(git rev-parse --abbrev-ref HEAD)
-                        COMMIT_ID=$(git rev-parse HEAD)
-
+                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
+                        BRANCH=\$(git rev-parse --abbrev-ref HEAD)
+                        COMMIT_ID=\$(git rev-parse HEAD)
                         # Append the build information to the CSV file
                         echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${filePath}" >> "${filePath}"
                     '''
@@ -110,7 +109,7 @@ pipeline {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
                         credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
-                        filePath: "${csvDir}/build_info.csv",
+                        filePath: "${env.FILE_PATH_CSV",
                         initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
                     )
                 }
