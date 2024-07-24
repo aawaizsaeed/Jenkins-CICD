@@ -5,8 +5,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                script {
-                    env.BRANCH_NAME = env.BRANCH_NAME ?: 'unknown'
                 }
             }
         }
