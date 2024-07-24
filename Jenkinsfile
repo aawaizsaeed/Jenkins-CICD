@@ -5,6 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                env.BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
             }
         }
        
