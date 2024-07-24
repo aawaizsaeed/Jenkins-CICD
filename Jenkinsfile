@@ -46,15 +46,6 @@ pipeline {
                 }
             }
         }
-        stage('Scan Docker Image with Trivy') {
-            steps {
-                script {
-                    // Scan the Docker image
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "trivy image --scanners vuln,secret,misconfig ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}"
-                }
-            }
-        }
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -109,11 +100,11 @@ pipeline {
             steps {
                 script {
                     // Scan the Docker image
-                    sh "trivy i ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "trivy image --scanners vuln,secret,misconfig ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}"
                 }
             }
         }
-
         stage('Upload CSV to Slack') {
             steps {
                 script {
