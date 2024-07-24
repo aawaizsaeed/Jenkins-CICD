@@ -97,14 +97,6 @@ pipeline {
                 }
             }
         }
-        stage('Scan Filesystem with Trivy') {
-            steps {
-                script {
-                    // Scan the filesystem of the project directory
-                    sh 'trivy fs --scanners vuln,secret,misconfig src/'
-                }
-            }
-        }
         stage('Scan Docker Image with Trivy') {
             steps {
                 script {
