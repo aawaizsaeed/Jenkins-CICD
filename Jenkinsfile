@@ -59,6 +59,8 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    sh "docker rmi ${IMAGE_NAME}:${imageTag}"
                     sh "docker image prune -f"
                     sh "docker images"
                 }
