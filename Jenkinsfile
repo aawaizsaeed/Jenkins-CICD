@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     def csvDir = "${env.CSV_DIR}"
-                    def filePath = "${env.FILE_PATH_CSV}"
+                    def filePath = "${env.CSV_DIR}/build_info.csv"
 
                     echo "CSV Directory: ${csvDir}"
                     echo "File Path: ${filePath}"
@@ -99,8 +99,7 @@ pipeline {
                         COMMIT_ID=\$(git rev-parse HEAD)
                         # Append the build information to the CSV file
                         echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${filePath}"
-                        ls -l "${CSV_DIR}"  # List contents to confirm the file creation
-                        cat "${FILE_PATH_CSV}"  # Output file content for verification
+                        ls -l "${CSV_DIR}"  # List contents to confirm the file creation   
                     '''
                 }
             }
