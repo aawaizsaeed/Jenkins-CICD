@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     def csvDir = "${env.CSV_DIR}"
-                    def filePath = "${env.CSV_DIR}/build_info.csv"
+                    def filePath = "${csvDir}/build_info.csv"
 
                     echo "CSV Directory: ${csvDir}"
                     echo "File Path: ${filePath}"
