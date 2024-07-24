@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Checkout') {
             steps {
@@ -67,6 +67,7 @@ pipeline {
                 script {
                     echo "CSV File Path: ${FILE_PATH}"
 
+                    // Create directory if it doesn't exist
                     sh """
                         mkdir -p ${env.CSV_DIR}
                         CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
@@ -88,7 +89,7 @@ pipeline {
                 script {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
-                        credentialId: 'slack-bot-token', 
+                        credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
                         filePath: "${FILE_PATH}",
                         initialComment: "Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}"
                     )
@@ -96,6 +97,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             slackSend(
