@@ -46,7 +46,14 @@ pipeline {
                 }
             }
         }
-        
+        stage('Scan Docker Image with Trivy') {
+            steps {
+                script {
+                    // Scan the Docker image
+                    sh "trivy i ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
         stage('Deploy Docker Container') {
             steps {
                 script {
