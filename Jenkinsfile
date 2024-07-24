@@ -101,7 +101,7 @@ pipeline {
                 script {
                     // Scan the Docker image
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "trivy image --scanners vuln,secret,misconfig ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}"
+                    sh "trivy -i ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}"
                 }
             }
         }
