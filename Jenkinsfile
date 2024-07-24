@@ -2,25 +2,11 @@ pipeline {
     agent any
 
     stages {
-        stage('Load Configuration') {
+        stage('Checkout') {
             steps {
-                script {
-                    // Read the configuration file
-                    def props = readProperties file: ${CONFIG_FILE}
-                    env.IMAGE_NAME = props['IMAGE_NAME']
-                    env.DOCKER_REGISTRY = props['DOCKER_REGISTRY']
-                    env.CSV_DIR = props['CSV_DIR']
-                    env.SLACK_CHANNEL = props['SLACK_CHANNEL']
-                    env.SLACK_CREDENTIAL_ID = props['SLACK_CREDENTIAL_ID']
-                }
+                checkout scm
             }
         }
-        stage('Clone Code from GitHub') {
-            steps {
-                git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
-            }
-        }
-        
         stage('Hello') {
             steps {
                 echo 'Hello World'
