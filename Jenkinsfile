@@ -7,51 +7,42 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    docker.build("${IMAGE_NAME}:${imageTag}")
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                     sh "docker images"
                 }
             }
         }
-        
+
         stage('Tag Docker Image') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker tag ${IMAGE_NAME}:${imageTag} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+                    sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
-        
+
         stage('Push Docker Image') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
                     docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}").push()
                     }
                 }
             }
         }
-        
+
         stage('Pull Docker Image') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}"
+                    sh "docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
-        
+
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -60,44 +51,33 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Cleanup') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    sh "docker rmi ${IMAGE_NAME}:${imageTag}"
+                    sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker image prune -f"
                     sh "docker images"
                 }
             }
         }
-        
+
         stage('Create CSV File') {
             steps {
                 script {
-                    def filePath = "${env.CSV_DIR}/build_info.csv"
+                    echo "CSV File Path: ${FILE_PATH}"
 
-                    echo "CSV File Path: ${filePath}"
-
-                    // Create directory if it doesn't exist
                     sh """
                         mkdir -p ${env.CSV_DIR}
-                    """
-
-                    // Create or update the CSV file
-                    sh """
-                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S') 
+                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
                         BRANCH=\$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=\$(git rev-parse HEAD)
 
-                        # Check if the CSV file already exists
-                        if [ ! -f ${filePath} ]; then
-                            # If it doesn't exist, create the header
-                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
+                        if [ ! -f ${FILE_PATH} ]; then
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${FILE_PATH}
                         fi
 
-                        # Append the details to the CSV file
-                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},${BUILD_NUMBER}" >> ${filePath}
+                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},${BUILD_NUMBER}" >> ${FILE_PATH}
                     """
                 }
             }
@@ -108,22 +88,21 @@ pipeline {
                 script {
                     slackUploadFile(
                         channel: "${SLACK_CHANNEL}", 
-                        credentialId: 'slack-bot-token', // Replace with your Slack bot token ID
-                        filePath: "${env.FILE_PATH}",
-                        initialComment: 'Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}'
+                        credentialId: 'slack-bot-token', 
+                        filePath: "${FILE_PATH}",
+                        initialComment: "Build information for job ${env.JOB_NAME} - build #${env.BUILD_NUMBER}"
                     )
                 }
             }
         }
     }
-
     post {
         always {
             slackSend(
                 channel: "${env.SLACK_CHANNEL}", 
                 color: '#439FE0', 
                 message: "Build status for ${env.JOB_NAME} - ${currentBuild.currentResult}: Latest Pipeline status ${env.BUILD_URL} Build number is ${env.BUILD_NUMBER}", 
-                teamDomain: 'DevOps Engineer'
+                teamDomain: 'your-team-domain'  // Replace with your Slack team domain
             )
             cleanWs()
         }
