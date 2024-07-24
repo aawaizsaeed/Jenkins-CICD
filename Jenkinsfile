@@ -76,33 +76,30 @@ pipeline {
         stage('Create CSV File') {
             steps {
                 script {
-                    def csvDir = "${env.CSV_DIR}"
-                    def filePath = "${csvDir}/build_info.csv"
+                    def filePath = "${env.CSV_DIR}/build_info.csv"
 
-                    echo "CSV Directory: ${csvDir}"
-                    echo "File Path: ${filePath}"
+                    echo "CSV File Path: ${filePath}"
 
                     // Create directory if it doesn't exist
-                    sh """ 
-                    mkdir -p ${csvDir}
-                    ls -l ${csvDir} 
+                    sh """
+                        mkdir -p ${env.CSV_DIR}
                     """
 
                     // Create or update the CSV file
-                    sh '''
-                        CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
-                        BRANCH=$(git rev-parse --abbrev-ref HEAD)
-                        COMMIT_ID=$(git rev-parse HEAD)
-                        FILE_PATH="pipeline_details.csv"
-                                        # Check if the CSV file already exists
-                        if [ ! -f ${FILE_PATH} ]; then
-                          If it doesn't exist, create the header
-                        echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${FILE_PATH}
+                    sh """
+                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
+                        BRANCH=\$(git rev-parse --abbrev-ref HEAD)
+                        COMMIT_ID=\$(git rev-parse HEAD)
+
+                        # Check if the CSV file already exists
+                        if [ ! -f ${filePath} ]; then
+                            # If it doesn't exist, create the header
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${filePath}
                         fi
 
-                            # Append the details to the CSV file
-                        echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${FILE_PATH}  
-                       '''
+                        # Append the details to the CSV file
+                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},${BUILD_NUMBER}" >> ${filePath}
+                    """
                 }
             }
         }
