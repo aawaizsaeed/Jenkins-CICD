@@ -7,6 +7,13 @@ pipeline {
                 git url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git', branch: 'main'
             }
         }
+        stage('Print Job Name') {
+            steps {
+                script {
+                    echo "The job name is: ${env.JOB_NAME}"
+                }
+            }
+        }
         
         stage('Hello') {
             steps {
