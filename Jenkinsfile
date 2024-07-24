@@ -97,6 +97,22 @@ pipeline {
                 }
             }
         }
+        stage('Scan Filesystem with Trivy') {
+            steps {
+                script {
+                    // Scan the filesystem of the project directory
+                    sh 'trivy fs --scanners vuln,secret,misconfig src/'
+                }
+            }
+        }
+        stage('Scan Docker Image with Trivy') {
+            steps {
+                script {
+                    // Scan the Docker image
+                    sh "trivy image --scanners vuln,secret,misconfig ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
 
         stage('Upload CSV to Slack') {
             steps {
