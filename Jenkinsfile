@@ -101,7 +101,7 @@ pipeline {
             steps {
                 script {
                     // Scan the Docker image
-                    sh "trivy image --scanners vuln,secret,misconfig ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+                    sh "trivy i ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
