@@ -90,14 +90,21 @@ pipeline {
 
                     // Create or update the CSV file
                     sh '''
-                        echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > "${filePath}"
-                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
-                        BRANCH=\$(git rev-parse --abbrev-ref HEAD)
-                        COMMIT_ID=\$(git rev-parse HEAD)
-                        # Append the build information to the CSV file
-                        echo "${JOB_NAME},\${CURRENT_TIME},\${BRANCH},\${COMMIT_ID},\${BUILD_NUMBER}" >> "${filePath}"
-                        ls -l "${CSV_DIR}"  # List contents to confirm the file creation   
-                    '''
+                        sh '''
+                            CURRENT_TIME=$(date +'%Y-%m-%d %H:%M:%S')
+                            BRANCH=$(git rev-parse --abbrev-ref HEAD)
+                            COMMIT_ID=$(git rev-parse HEAD)
+                            FILE_PATH="pipeline_details.csv"
+                
+                            # Check if the CSV file already exists
+                            if [ ! -f ${FILE_PATH} ]; then
+                              If it doesn't exist, create the header
+                            echo "Pipeline Name,Time,Branch,Commit ID,Build Number" > ${FILE_PATH}
+                            fi
+
+                            # Append the details to the CSV file
+                            echo "${JOB_NAME},${CURRENT_TIME},${BRANCH},${COMMIT_ID},${BUILD_NUMBER}" >> ${FILE_PATH}  
+                            '''
                 }
             }
         }
