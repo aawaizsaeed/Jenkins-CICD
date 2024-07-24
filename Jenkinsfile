@@ -87,7 +87,7 @@ pipeline {
 
                     // Create or update the CSV file
                     sh """
-                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S')
+                        CURRENT_TIME=\$(date +'%Y-%m-%d %H:%M:%S') 
                         BRANCH=\$(git rev-parse --abbrev-ref HEAD)
                         COMMIT_ID=\$(git rev-parse HEAD)
 
