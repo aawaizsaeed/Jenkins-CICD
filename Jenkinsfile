@@ -7,12 +7,7 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Hello') {
-            steps {
-                echo 'Hello World'
-            }
-        }
-
+       
         stage('Build Docker Image') {
             steps {
                 script {
