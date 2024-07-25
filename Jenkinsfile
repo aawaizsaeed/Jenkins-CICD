@@ -13,7 +13,7 @@ pipeline {
 
                     checkout([$class: 'GitSCM',
                         branches: [[name: "*/${branchName}"]],
-                        userRemoteConfigs: [[url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git']]
+                        userRemoteConfigs: [[url: '${MY_CODE}']]
                     ])
                 }
             }
