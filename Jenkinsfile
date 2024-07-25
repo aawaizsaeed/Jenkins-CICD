@@ -2,16 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-            // Checkout the specified branch using params.BRANCH
-                    checkout([$class: 'GitSCM', 
-                        branches: [[name: "*/${params.BRANCH}"]],
-                        userRemoteConfigs: [[url: '${MY_CODE}']]
-                    ])
-                }
-            }
+         stage('Example') {
+              steps {
+                  git branch: "${params.BRANCH}", url: 'https://github.com/jenkinsci/git-parameter-plugin.git'
+             }
         }
        
         stage('Build Docker Image') {
