@@ -46,7 +46,6 @@ pipeline {
                 }
             }
         }
-        
         stage('Deploy Docker Container') {
             steps {
                 script {
@@ -97,7 +96,20 @@ pipeline {
                 }
             }
         }
+        stage('Scan Docker Image with Trivy') {
+            steps {
+                script {
 
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    // Scan the Docker image
+                    sh """
+                       export PATH=\$PATH:/var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/trivy/bin
+                       trivy image --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}
+                       """
+                //  sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}"
+                }
+            }
+        }
         stage('Upload CSV to Slack') {
             steps {
                 script {
