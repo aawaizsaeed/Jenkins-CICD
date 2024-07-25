@@ -4,10 +4,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: "${MY_CODE}", branch: "${params.BRANCHES}"
+                stage('Checkout') {
+            steps {
+                git branch: "${params.BRANCHES}", url: '${MY_CODE}'
             }
         }
-       
+                
         stage('Build Docker Image') {
             steps {
                 script {
