@@ -4,7 +4,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${params.BRANCHES}", url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git'
+                script {
+            // Checkout the specified branch using params.BRANCH
+                    checkout([$class: 'GitSCM', 
+                        branches: [[name: "*/${params.BRANCHES}"]],
+                        userRemoteConfigs: [[url: '${MY_CODE}']]
+                    ])
+                }
             }
         }
        
