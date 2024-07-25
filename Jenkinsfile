@@ -4,8 +4,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                stage('Checkout') {
-            steps {
                 git branch: "${params.BRANCHES}", url: '${MY_CODE}'
             }
         }
