@@ -2,9 +2,17 @@ pipeline {
     agent any
 
     stages {
-        stage('Example') {
+        stage('Checkout') {
             steps {
-                git branch: "${params.BRANCH}", url: '${MY_CODE}'
+                script {
+                    def branchName = params.BRANCH
+                    echo "Checking out branch: ${branchName}"
+
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "*/${branchName}"]],
+                        userRemoteConfigs: [[url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git']]
+                    ])
+                }
             }
         }
        
