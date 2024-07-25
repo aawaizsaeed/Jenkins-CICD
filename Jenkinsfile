@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     stages {
-         stage('Example') {
-              steps {
-                  git branch: "${params.BRANCH}", url: '${MY_CODE}'
-             }
+        stage('Example') {
+            steps {
+                git branch: "${params.BRANCH}", url: '${MY_CODE}'
+            }
         }
        
         stage('Build Docker Image') {
