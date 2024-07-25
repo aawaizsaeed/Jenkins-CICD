@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${params.BRANCHES}", url: '${MY_CODE}'
+                checkout scm
             }
         }
                 
