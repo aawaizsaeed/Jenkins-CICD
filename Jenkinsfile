@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm zx,.mcnv
+                echo "User selected branch is ${params.BRANCHES}.split('/').last()"
+                git url: "${MY_CODE}", branch: "${params.BRANCHES}"
             }
         }
        
