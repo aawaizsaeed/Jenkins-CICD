@@ -4,13 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    // Checkout the branch specified by the parameter
-                    checkout([$class: 'GitSCM', 
-                        branches: [[name: "*/${params.BRANCH}"]],
-                        userRemoteConfigs: [[url: '${MY_CODE}']] // Replace with your repo URL
-                    ])
-                }
+                git url: "${MY_CODE}", branch: "${params.BRANCHES}"
             }
         }
        
