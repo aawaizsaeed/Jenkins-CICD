@@ -7,7 +7,7 @@ pipeline {
                 script {
             // Checkout the specified branch using params.BRANCH
                     checkout([$class: 'GitSCM', 
-                        branches: [[name: "*/${params.BRANCHES}"]],
+                        branches: [[name: "*/${params.BRANCH}"]],
                         userRemoteConfigs: [[url: '${MY_CODE}']]
                     ])
                 }
