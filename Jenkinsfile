@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${params.BRANCHES}", url: '${MY_CODE}'
+                git branch: "${params.BRANCHES}", url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git'
             }
         }
        
