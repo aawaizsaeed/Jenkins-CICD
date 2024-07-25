@@ -5,14 +5,17 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
+                    def branchName = params.BRANCH
+                    echo "Checking out branch: ${branchName}"
+
                     checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${params.BRANCHES}"]],
-                        userRemoteConfigs: [[url: '${MY_CODE}']]
+                        branches: [[name: "*/${branchName}"]],
+                        userRemoteConfigs: [[url: 'https://github.com/aawaizsaeed/Jenkins-CICD.git']]
                     ])
                 }
             }
         }
-                
+       
         stage('Build Docker Image') {
             steps {
                 script {
