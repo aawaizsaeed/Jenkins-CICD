@@ -102,9 +102,11 @@ pipeline {
 
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     // Scan the Docker image
-                    sh 'trivy image --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}'
+                    sh """
+                       export PATH=\$PATH:/var/jenkins_home/workspace/DevOps-Jenkins-CiCd_develop@tmp/trivy/bin
+                       trivy image --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}
+                       """
                 //  sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}"
-                    
                 }
             }
         }
