@@ -100,11 +100,9 @@ pipeline {
             steps {
                 script {
                     // Scan the Docker image
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
-                    
                     sh """
-                    trivy image --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}
-                ##  sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTage}"
+                    trivy image --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}
+                ##  sh "trivy --no-progress --exit-code 1 --severity HIGH,CRITICAL,MEDIUM ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}"
                     """
                 }
             }
