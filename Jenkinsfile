@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+                echo "User selected branch is ${params.BRANCHES}.split('/').last()"
                 git url: "${MY_CODE}", branch: "${params.BRANCHES}"
             }
         }
