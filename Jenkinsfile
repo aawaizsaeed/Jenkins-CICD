@@ -63,23 +63,8 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     
-                    def remote = [:]
-                    remote.name = 'server'
-                    remote.host = '172.17.0.3'
-                    remote.user = '${SSH_USER}'
-                    remote.password = '${SSH_PASSWORD}'  // Ensure this is securely managed
-                    remote.allowAnyHosts = true
-                    
-                    sshCommand remote: remote, command: "ls -lrt"
-                    sshCommand remote: remote, command: "for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done"
-                    
-                    sshCommand remote: remote, command: """
-                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        docker stop ${CONTAINER_NAME} || true &&
-                        docker rm ${CONTAINER_NAME} || true &&
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        echo "Deployment successful"
-                    """
+                   sh "ssh tt ${SSH_USER}@172.17.0.3"
+                   sh "ls -ltrh"
                 }
             }
         }
