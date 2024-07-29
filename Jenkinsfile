@@ -64,7 +64,7 @@ pipeline {
 
                     // Transfer deploy.sh to the remote server
                     sh """
-                        sshpass -p '${SSH_PASSWORD}' scp -o StrictHostKeyChecking=no deploy.sh ${SSH_USER}@${UBUNTU_IP}
+                        ssh ${SSH_USER}@${UBUNTU_IP}
                     """
                      sh """
                         # Pull the Docker image from the registry
