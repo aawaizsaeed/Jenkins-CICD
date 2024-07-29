@@ -66,7 +66,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY')]) {
                         sh """
 
-                            echo "Testing SSH connection to ${ubuntuIp}..."
+                            echo "Testing SSH connection to ${UBUNTU_IP}..."
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${UBUNTU_IP} 'echo "SSH connection successful"'
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
