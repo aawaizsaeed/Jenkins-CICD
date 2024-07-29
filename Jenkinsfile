@@ -12,7 +12,7 @@ pipeline {
                     echo "Checking out branch: ${branchName}"
 
                     checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${branchName}"]],my-
+                        branches: [[name: "*/${branchName}"]],
                         userRemoteConfigs: [[url: '${MY_CODE}']]
                     ])
                 }
