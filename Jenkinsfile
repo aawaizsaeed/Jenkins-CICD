@@ -61,10 +61,15 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
+
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                     withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY')]) {
+                    def remoteServer = '${UBUNTU_IP}' // Replace with your remote server IP
+                    def sshCredentialsId = '${ubuntu-ssh}' // Replace with your SSH credentials ID
+
+                    // Ensure SSH plugin is available and use it to run commands on the remote server
+                    sshagent([sshCredentialsId]) {
                         sh """
-                             ssh -i \${SSH_KEY} -o StrictHostKeyChecking=no \${SSH_USER}@${UBUNTU_IP} '
+                            ssh -o StrictHostKeyChecking=no ${remoteServer} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 docker stop ${CONTAINER_NAME} || true &&
                                 docker rm ${CONTAINER_NAME} || true &&
@@ -72,7 +77,6 @@ pipeline {
                                 echo "Deployment successful"
                             '
                      """
-                    }
                 }
             }
         }
