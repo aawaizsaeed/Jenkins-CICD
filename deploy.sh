@@ -2,7 +2,7 @@
 
 # Variables
 IMAGE_NAME="python-app"
-DOCKER_REGISTRY="localhost:5001"
+DOCKER_REGISTRY="172.17.0.3:5000"
 IMAGE_TAG="latest-${BUILD_NUMBER}"
 CONTAINER_NAME="python-app-container"
 
