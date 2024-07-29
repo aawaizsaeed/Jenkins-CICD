@@ -61,20 +61,29 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-                    // Ensure deploy.sh has execute permissions
-                    sh "chmod +x ./deploy.sh"
 
                     // Transfer deploy.sh to the remote server
                     sh """
-                        sshpass -p '${SSH_PASSWORD}' scp -o StrictHostKeyChecking=no deploy.sh ${SSH_USER}@${UBUNTU_IP}:/tmp/deploy.sh
+                        sshpass -p '${SSH_PASSWORD}' scp -o StrictHostKeyChecking=no deploy.sh ${SSH_USER}@${UBUNTU_IP}
                     """
+                     sh """
+                        # Pull the Docker image from the registry
+                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
 
-                    // Execute deploy.sh on the remote server
-                    sh """
-                        sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
-                            chmod +x /tmp/deploy.sh &&
-                            /tmp/deploy.sh
-                        '
+                        # Stop and remove existing container if it exists
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+
+                        # Run a new container from the pulled image
+                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+                        # Optional: Wait for a few seconds to ensure the application is up and running
+                        sleep 10
+
+                        # Optional: Check the application with curl
+                        # curl -f http://localhost:80/ || { echo "Health check failed"; exit 1; }
+
+                        echo "Deployment successful"
                     """
                 }
             }
