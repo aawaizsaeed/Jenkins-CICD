@@ -67,7 +67,7 @@ pipeline {
                         sh """
 
                             echo "Testing SSH connection to ${ubuntuIp}..."
-                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${ubuntuIp} 'echo "SSH connection successful"'
+                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${UBUNTU_IP} 'echo "SSH connection successful"'
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 docker stop ${CONTAINER_NAME} || true &&
