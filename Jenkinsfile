@@ -65,6 +65,41 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Docker Container') {
+            steps {
+                script {
+                    def ubuntuServer = 'ubuntu-server-ip'  // Replace with your Ubuntu server IP
+                    def sshCredentialsId = 'your-ssh-credentials-id'  // Replace with your Jenkins SSH credentials ID
+
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'SSH Config',
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: 'deploy.sh',
+                                        remoteDirectory: '/path/on/remote/server',
+                                        removePrefix: 'deploy.sh',
+                                        remoteFiles: 'deploy.sh'
+                                    )
+                                ],
+                                usePromotionTimestamp: false,
+                                useWorkspaceInPromotion: false,
+                                useWorkspaceInTemporaryDirectory: false
+                            )
+                        ]
+                    )
+
+                    sh """
+                        ssh -i /var/jenkins_home/.ssh/id_rsa user@${ubuntuServer} "
+                            docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER} &&
+                            docker run -d --name ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}
+                        "
+                    """
+                }
+            }
+        }
         
         stage('Cleanup') {
             steps {
