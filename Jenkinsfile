@@ -65,7 +65,7 @@ pipeline {
                     
                     def remote = [:]
                     remote.name = 'server'
-                    remote.host = '${env.UBUNTU_IP}'
+                    remote.host = '$172.17.0.3}'
                     remote.user = '${SSH_USER$}'
                     remote.password = '${SSH_PASSWORD}'  // Ensure this is securely managed
                     remote.allowAnyHosts = true
