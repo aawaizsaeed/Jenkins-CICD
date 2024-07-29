@@ -67,6 +67,7 @@ pipeline {
                     def sshCredentialsId = '${ubuntu-ssh}' // Replace with your SSH credentials ID
 
                     // Ensure SSH plugin is available and use it to run commands on the remote server
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu-ssh', keyFileVariable: 'SSH_KEY')]) {
                     sshagent([sshCredentialsId]) {
                         sh """
                             ssh -o StrictHostKeyChecking=no ${remoteServer} '
@@ -76,7 +77,8 @@ pipeline {
                                 docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 echo "Deployment successful"
                             '
-                     """
+                         """
+                        }
                     }
                 }
             }
