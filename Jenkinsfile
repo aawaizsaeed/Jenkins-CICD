@@ -16,7 +16,7 @@ pipeline {
                         userRemoteConfigs: [[url: '${MY_CODE}']]
                     ])
                 }
-            }sshpass -p ${sshPassword} ssh -o StrictHostKeyChecking=no root@${ubuntuIp}
+            }
         }
        
         stage('Build Docker Image') {
