@@ -37,13 +37,13 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Push Docker Image') {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    docker.withRegistry("http://${DOCKER_REGISTRY}") {
-                        docker.image("${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag}").push()
+                    docker.withRegistry("http://${DOCKER_REGISTRY}:5000") {
+                        docker.image("${IMAGE_NAME}:${imageTag}").push()
                     }
                 }
             }
