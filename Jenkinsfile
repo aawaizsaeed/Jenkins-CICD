@@ -73,7 +73,7 @@ pipeline {
                     sshCommand remote: remote, command: "ls -lrt"
                     sshCommand remote: remote, command: "for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done"
                     
-                    sh """
+                    sshCommand remote: remote, command: """
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         docker stop ${CONTAINER_NAME} || true &&
                         docker rm ${CONTAINER_NAME} || true &&
