@@ -79,7 +79,7 @@ pipeline {
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: 'deploy.sh',
-                                        remoteDirectory: '/path/on/remote/server',
+                                        remoteDirectory: '/deploy_script',
                                         removePrefix: 'deploy.sh',
                                         remoteFiles: 'deploy.sh'
                                     )
