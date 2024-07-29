@@ -64,7 +64,7 @@ pipeline {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                      withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY')]) {
                         sh """
-                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP}'
+                             ssh -i \${SSH_KEY} -o StrictHostKeyChecking=no \${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 docker stop ${CONTAINER_NAME} || true &&
                                 docker rm ${CONTAINER_NAME} || true &&
