@@ -57,45 +57,24 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy Docker Container') {
             steps {
                 script {
+                    // Ensure deploy.sh has execute permissions
                     sh "chmod +x ./deploy.sh"
-                    sh './deploy.sh'
-                }
-            }
-        }
 
-        stage('Deploy Docker Container') {
-            steps {
-                script {
-                    def ubuntuServer = 'ubuntu-server-ip'  // Replace with your Ubuntu server IP
-                    def sshCredentialsId = 'your-ssh-credentials-id'  // Replace with your Jenkins SSH credentials ID
-
-                    sshPublisher(
-                        publishers: [
-                            sshPublisherDesc(
-                                configName: 'SSH Config',
-                                transfers: [
-                                    sshTransfer(
-                                        sourceFiles: 'deploy.sh',
-                                        remoteDirectory: '/deploy_script',
-                                        removePrefix: 'deploy.sh',
-                                        remoteFiles: 'deploy.sh'
-                                    )
-                                ],
-                                usePromotionTimestamp: false,
-                                useWorkspaceInPromotion: false,
-                                useWorkspaceInTemporaryDirectory: false
-                            )
-                        ]
-                    )
-
+                    // Transfer deploy.sh to the remote server
                     sh """
-                        ssh -i /var/jenkins_home/.ssh/id_rsa user@${ubuntuServer} "
-                            docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER} &&
-                            docker run -d --name ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER}
-                        "
+                        sshpass -p '${SSH_PASSWORD}' scp -o StrictHostKeyChecking=no deploy.sh ${SSH_USER}@${UBUNTU_IP}:/tmp/deploy.sh
+                    """
+
+                    // Execute deploy.sh on the remote server
+                    sh """
+                        sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no ${SSH_USER}@${REMOTE_SERVER} '
+                            chmod +x /tmp/deploy.sh &&
+                            /tmp/deploy.sh
+                        '
                     """
                 }
             }
