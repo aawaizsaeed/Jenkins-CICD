@@ -66,10 +66,6 @@ pipeline {
                         sh """
 
                           sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP}
-
-                            echo "Testing SSH connection to ${UBUNTU_IP}..."
-                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${UBUNTU_IP} 'echo "SSH connection successful"'
-                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 docker stop ${CONTAINER_NAME} || true &&
                                 docker rm ${CONTAINER_NAME} || true &&
