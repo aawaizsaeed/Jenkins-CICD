@@ -71,7 +71,7 @@ pipeline {
 
                     // Execute deploy.sh on the remote server
                     sh """
-                        sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no ${SSH_USER}@${REMOTE_SERVER} '
+                        sshpass -p '${SSH_PASSWORD}' ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                             chmod +x /tmp/deploy.sh &&
                             /tmp/deploy.sh
                         '
