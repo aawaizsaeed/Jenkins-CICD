@@ -63,10 +63,9 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     
-                   sh "ssh ${SSH_USER}@${UBUNTU_IP}"
+                   sh "ssh -T ${SSH_USER}@${UBUNTU_IP}"
                    sh "ls -ltrh"
                    sh  """
-                        export TERM=xterm; \
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} && \
                         docker stop ${CONTAINER_NAME} || true && \
                         docker rm ${CONTAINER_NAME} || true && \
