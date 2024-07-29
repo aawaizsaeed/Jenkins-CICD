@@ -63,7 +63,7 @@ pipeline {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     
-                   sh "ssh tt ${SSH_USER}@172.17.0.3"
+                   sh "ssh ${SSH_USER}@${UBUNTU_IP}"
                    sh "ls -ltrh"
                 }
             }
