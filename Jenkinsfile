@@ -61,7 +61,7 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                         sh """
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} &&
