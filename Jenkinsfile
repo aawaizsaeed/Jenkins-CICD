@@ -88,7 +88,24 @@ pipeline {
                 }
             }
         }
-        
+
+        stage('Deploy Docker Container') {
+            steps {
+                script {
+                    withCredentials([sshUserPrivateKey(credentialsId: ssh-key, keyFileVariable: 'SSH_KEY')]) {
+                        sh """
+                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${REMOTE_SERVER} '
+                                docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} &&
+                                docker stop ${CONTAINER_NAME} || true &&
+                                docker rm ${CONTAINER_NAME} || true &&
+                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} &&
+                                echo "Deployment successful"
+                            '
+                        """
+                    }
+                }
+            }
+        }
         stage('Cleanup') {
             steps {
                 script {
