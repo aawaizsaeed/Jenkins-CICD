@@ -16,7 +16,7 @@ pipeline {
                         userRemoteConfigs: [[url: '${MY_CODE}']]
                     ])
                 }
-            }
+            }sshpass -p ${sshPassword} ssh -o StrictHostKeyChecking=no root@${ubuntuIp}
         }
        
         stage('Build Docker Image') {
@@ -62,9 +62,10 @@ pipeline {
             steps {
                 script {
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY')]) {
+        
                         sh """
+
+                          sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP}
 
                             echo "Testing SSH connection to ${UBUNTU_IP}..."
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_USER}@${UBUNTU_IP} 'echo "SSH connection successful"'
