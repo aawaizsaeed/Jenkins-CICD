@@ -64,7 +64,7 @@ pipeline {
 
                     // Transfer deploy.sh to the remote server
                     sh """
-                        ssh ${SSH_USER}@${UBUNTU_IP}
+                        ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                     """
                      sh """
                         # Pull the Docker image from the registry
