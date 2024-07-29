@@ -77,6 +77,7 @@ pipeline {
                                 echo "Deployment successful"
                             '
                      """
+                    }
                 }
             }
         }
