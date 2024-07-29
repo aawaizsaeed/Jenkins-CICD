@@ -61,13 +61,15 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
+                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    
                     withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                         sh """
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
                                 docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} &&
                                 docker stop ${CONTAINER_NAME} || true &&
                                 docker rm ${CONTAINER_NAME} || true &&
-                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} &&
+                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                                 echo "Deployment successful"
                             '
                         """
