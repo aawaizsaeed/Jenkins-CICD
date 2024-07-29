@@ -61,37 +61,6 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-
-                    // Transfer deploy.sh to the remote server
-                    sh """
-                        ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} '
-                    """
-                     sh """
-                        # Pull the Docker image from the registry
-                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-
-                        # Stop and remove existing container if it exists
-                        docker stop ${CONTAINER_NAME} || true
-                        docker rm ${CONTAINER_NAME} || true
-
-                        # Run a new container from the pulled image
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
-
-                        # Optional: Wait for a few seconds to ensure the application is up and running
-                        sleep 10
-
-                        # Optional: Check the application with curl
-                        # curl -f http://localhost:80/ || { echo "Health check failed"; exit 1; }
-
-                        echo "Deployment successful"
-                    """
-                }
-            }
-        }
-
-        stage('Deploy Docker Container') {
-            steps {
-                script {
                     withCredentials([sshUserPrivateKey(credentialsId: ssh-key, keyFileVariable: 'SSH_KEY')]) {
                         sh """
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no ${SSH_USER}@${REMOTE_SERVER} '
