@@ -61,28 +61,26 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-
                     def imageTag = "latest-${env.BUILD_NUMBER}"
-                    def remoteServer = '${UBUNTU_IP}' // Replace with your remote server IP
-                    def sshCredentialsId = 'ubuntu-ssh' // Replace with your SSH credentials ID
-
-                    // Ensure SSH plugin is available and use it to run commands on the remote server
-                    withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu-ssh', keyFileVariable: 'SSH_KEY')]) {
-                    sshagent([sshCredentialsId]) {
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ${remoteServer} '
-                                docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                                docker stop ${CONTAINER_NAME} || true &&
-                                docker rm ${CONTAINER_NAME} || true &&
-                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                                echo "Deployment successful"
-                            '
-                         """
-                        }
-                    }
+                    
+                    def remote = [:]
+                    remote.name = 'server'
+                    remote.host = 'UBUNTU_IP'
+                    remote.user = 'SSH_USER'
+                    remote.password = 'SSH_PASSWORD'  // Ensure this is securely managed
+                    remote.allowAnyHosts = true
+                    
+                    sshCommand remote: remote, command: """
+                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                        docker stop ${CONTAINER_NAME} || true &&
+                        docker rm ${CONTAINER_NAME} || true &&
+                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                        echo "Deployment successful"
+                    """
                 }
             }
         }
+        
         stage('Cleanup') {
             steps {
                 script {
