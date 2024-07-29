@@ -64,7 +64,7 @@ pipeline {
 
                     def imageTag = "latest-${env.BUILD_NUMBER}"
                     def remoteServer = '${UBUNTU_IP}' // Replace with your remote server IP
-                    def sshCredentialsId = '${ubuntu-ssh}' // Replace with your SSH credentials ID
+                    def sshCredentialsId = 'ubuntu-ssh' // Replace with your SSH credentials ID
 
                     // Ensure SSH plugin is available and use it to run commands on the remote server
                     withCredentials([sshUserPrivateKey(credentialsId: 'ubuntu-ssh', keyFileVariable: 'SSH_KEY')]) {
