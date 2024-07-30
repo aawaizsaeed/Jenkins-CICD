@@ -76,7 +76,6 @@ pipeline {
                             docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                             echo "Deployment successful"
                         """
-                    }
                 }
             }
         }
