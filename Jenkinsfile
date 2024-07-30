@@ -61,9 +61,10 @@ pipeline {
         stage ('Deploy') {
             steps{
                 sshagent(credentials : ['ubuntu-ssh']) {
+
+                     sh 'ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
+                     sh 'ssh -vT ${SSH_USER}@${UBUNTU_IP}'
                      sh """
-                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime"echo 'SSH Connection Successful'"
-                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} "ls -lrt"
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         docker stop ${CONTAINER_NAME} || true &&
                         docker rm ${CONTAINER_NAME} || true &&
