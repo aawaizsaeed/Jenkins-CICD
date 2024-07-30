@@ -68,10 +68,10 @@ pipeline {
                     sshagent([credentialsId]) {
                         sh "ssh -T -o StrictHostKeyChecking=no root@172.17.0.3 who"
                         sh """
-                            docker pull ${DOCKER_REGISTRY}/my-image:latest &&
+                            docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                             docker stop ${CONTAINER_NAME} || true &&
                             docker rm ${CONTAINER_NAME} || true &&
-                            docker run -d --name my-container -p 80:80 ${DOCKER_REGISTRY}/my-image:latest &&
+                            docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                             echo "Deployment successful"
                         """
                     }
