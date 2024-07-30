@@ -68,7 +68,7 @@ pipeline {
                     remote.allowAnyHosts = true
 
             // Use credentials securely
-                    withCredentials([usernamePassword(credentialsId: 'ubuntu-ssh', passwordVariable: 'password', usernameVariable: 'userName')]) {
+                    withCredentials([usernamePassword(credentialsId: 'ubuntu-ssh', passwordVariable: '${SSH_PASSWORD}', usernameVariable: '${SSH_USER}')]) {
                         remote.user = userName
                         remote.password = password
 
