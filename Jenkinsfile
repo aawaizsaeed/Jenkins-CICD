@@ -58,15 +58,17 @@ pipeline {
             }
         }
 
-        stage('SSH to Remote Machine') {
+       stage('Execute Remote Command') {
             steps {
-                sshPublisher(
+                publishOverSSH(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'my-ssh-config',  // Configuration name for SSH (defined below)
+                            configName: 'my-ssh-server',  // Name of the SSH configuration
                             transfers: [
                                 sshTransfer(
-                                    execCommand: 'echo "Hello, World!"'
+                                    sourceFiles: '',              // No file transfer needed
+                                    remoteDirectory: '',          // No specific remote directory needed
+                                    execCommand: 'echo "Hello, World!"'  // Command to execute on the remote server
                                 )
                             ],
                             usePromotionTimestamp: false,
