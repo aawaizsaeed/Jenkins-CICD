@@ -69,8 +69,8 @@ pipeline {
                         sh "ssh -T -o StrictHostKeyChecking=no root@172.17.0.3 who"
                         sh """
                             docker pull my-registry/my-image:latest &&
-                            docker stop my-container || true &&
-                            docker rm my-container || true &&
+                            docker stop ${CONTAINER_NAME} || true &&
+                            docker rm ${CONTAINER_NAME} || true &&
                             docker run -d --name my-container -p 80:80 my-registry/my-image:latest &&
                             echo "Deployment successful"
                         """
