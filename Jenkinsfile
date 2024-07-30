@@ -66,8 +66,8 @@ pipeline {
                     
                     // Use the sshagent block to use SSH credentials
                     sshagent([credentialsId]) {
+                        sh "ssh -T -o StrictHostKeyChecking=no root@172.17.0.3 who"
                         sh """
-                            ssh -T -o StrictHostKeyChecking=no root@172.17.0.3 << EOF
                             docker pull my-registry/my-image:latest &&
                             docker stop my-container || true &&
                             docker rm my-container || true &&
