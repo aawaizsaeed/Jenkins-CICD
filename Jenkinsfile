@@ -66,7 +66,7 @@ pipeline {
                     
                     // Use the sshagent block to use SSH credentials
                     sshagent([credentialsId]) {
-                        sh "ssh -vT -o StrictHostKeyChecking=no root@172.17.0.3 who"
+                        sh "ssh -vT -o StrictHostKeyChecking=no root@172.17.0.3 'whoami'"
                         sh """
                             docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                             docker stop ${CONTAINER_NAME} || true &&
