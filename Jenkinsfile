@@ -58,18 +58,29 @@ pipeline {
             }
         }
 
-        stage ('Deploy') {
-            steps{
-                sshagent(credentials : ['ubuntu-ssh']) {
+        stage('Remote SSH') {
+            steps {
+                script {
+                    // Define the SSH connection details
+                    def remote = [:]
+                    remote.name = 'server'
+                    remote.host = '172.17.0.3'
+                    remote.user = '${SSH_USER}'
+                    remote.password = '${SSH_PASSWORD}' // Ensure this is securely managed
+                    remote.allowAnyHosts = true
 
-                     sh 'ssh -vT -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
-                     sh """
+                    // Use the sshCommand step to run commands on the remote server
+                    sshCommand remote: remote, command: "whoami"
+
+                    sshCommand remote: remote, command: """
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         docker stop ${CONTAINER_NAME} || true &&
                         docker rm ${CONTAINER_NAME} || true &&
                         docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         echo "Deployment successful"
-                """
+                    """
+
+                    
                 }
             }
         }
