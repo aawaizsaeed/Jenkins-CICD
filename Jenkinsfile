@@ -64,7 +64,7 @@ pipeline {
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
-                                configName: 'my-ssh-server',
+                                configName: 'my-ssh-config',
                                 transfers: [
                                     sshTransfer(
                                         sourceFiles: '',
