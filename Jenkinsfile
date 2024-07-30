@@ -69,8 +69,6 @@ pipeline {
                     remote.password = '${SSH_PASSWORD}' // Ensure this is securely managed
                     remote.allowAnyHosts = true
 
-                    withCredentials([usernamePassword(credentialsId: 'ubuntu-ssh', passwordVariable: 'password', usernameVariable: 'userName')]) {
-
                     // Use the sshCommand step to run commands on the remote server
                     sshCommand remote: remote, command: "whoami"
 
@@ -82,7 +80,6 @@ pipeline {
                         echo "Deployment successful"
                     """
 
-                    }
                 }
             }
         }
