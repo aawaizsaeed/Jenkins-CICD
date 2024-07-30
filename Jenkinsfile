@@ -61,18 +61,20 @@ pipeline {
         stage('Deploy Docker Container') {
             steps {
                 script {
-                    def imageTag = "latest-${env.BUILD_NUMBER}"
+                    // Define the credentials ID for SSH
+                    def credentialsId = 'ubuntu-ssh' // Replace with your actual credentials ID
                     
-                   sh "ssh -T ${SSH_USER}@${UBUNTU_IP}"
-                   sh "ls -ltrh"
-                   sh  """
-                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} && \
-                        docker stop ${CONTAINER_NAME} || true && \
-                        docker rm ${CONTAINER_NAME} || true && \
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} && \
-                        echo "Deployment successful"
-                    """
-                    
+                    // Use the sshagent block to use SSH credentials
+                    sshagent([credentialsId]) {
+                        sh """
+                            ssh -o StrictHostKeyChecking=no root@172.17.0.3 << EOF
+                            docker pull my-registry/my-image:latest &&
+                            docker stop my-container || true &&
+                            docker rm my-container || true &&
+                            docker run -d --name my-container -p 80:80 my-registry/my-image:latest &&
+                            echo "Deployment successful"
+                        """
+                    }
                 }
             }
         }
