@@ -62,7 +62,7 @@ pipeline {
             steps{
                 sshagent(credentials : ['ubuntu-ssh']) {
                   //  sh 'ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
-                    sh 'ssh -v ${SSH_USER}@${UBUNTU_IP}'
+                    sh 'ssh -vT ${SSH_USER}@${UBUNTU_IP}'
                     sh """
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         docker stop ${CONTAINER_NAME} || true &&
