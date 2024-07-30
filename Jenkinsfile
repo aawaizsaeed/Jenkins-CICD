@@ -60,7 +60,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                ssh """
+                sh """
                 ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o ConnectTimeout=10 "${SSH_USER}@${UBUNTU_IP}" "echo 'SSH Connection Successful'"
             
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
