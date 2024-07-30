@@ -60,22 +60,24 @@ pipeline {
 
        stage('Execute Remote Command') {
             steps {
-                publishOverSSH(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'my-ssh-server',  // Name of the SSH configuration
-                            transfers: [
-                                sshTransfer(
-                                    sourceFiles: '',              // No file transfer needed
-                                    remoteDirectory: '',          // No specific remote directory needed
-                                    execCommand: 'echo "Hello, World!"'  // Command to execute on the remote server
-                                )
-                            ],
-                            usePromotionTimestamp: false,
-                            verbose: true
-                        )
-                    ]
-                )
+                script {
+                    sshPublisher(
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'my-ssh-server',
+                                transfers: [
+                                    sshTransfer(
+                                        sourceFiles: '',
+                                        remoteDirectory: '',
+                                        execCommand: 'echo "Hello, World!"'
+                                    )
+                                ],
+                                usePromotionTimestamp: false,
+                                verbose: true
+                            )
+                        ]
+                    )
+                }
             }
         }
         
