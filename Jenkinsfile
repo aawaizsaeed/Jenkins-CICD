@@ -58,23 +58,30 @@ pipeline {
             }
         }
 
-        stage('Deploy Docker Container') {
+        stage('Remote SSH') {
             steps {
                 script {
-                    // Define the credentials ID for SSH
-                    def credentialsId = 'ubuntu-ssh' // Replace with your actual credentials ID
+                    // Define the SSH connection details
+                    def remote = [:]
+                    remote.name = 'server'
+                    remote.host = '${UBUNTU_IP}'
+                    remote.user = '${SSH_USER}'
+                    remote.password = '${SSH_PASSWORD}' // Ensure this is securely managed
+                    remote.allowAnyHosts = true
+
+                    // Use the sshCommand step to run commands on the remote server
+                    sshCommand remote: remote, command: "ls -lrt"
+                    sshCommand remote: remote, command: "for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done"
+
+                    sshCommand remote: remote, command: """
+                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                        docker stop ${CONTAINER_NAME} || true &&
+                        docker rm ${CONTAINER_NAME} || true &&
+                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                        echo "Deployment successful"
+                    """
+
                     
-                    // Use the sshagent block to use SSH credentials
-                    sshagent([credentialsId]) {
-                        sh "ssh -vT -o StrictHostKeyChecking=no root@172.17.0.3 'whoami'"
-                        sh """
-                            docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                            docker stop ${CONTAINER_NAME} || true &&
-                            docker rm ${CONTAINER_NAME} || true &&
-                            docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                            echo "Deployment successful"
-                        """
-                    }
                 }
             }
         }
