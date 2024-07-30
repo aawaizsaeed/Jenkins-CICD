@@ -58,17 +58,19 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                sh """
-                ssh -i "$SSH_KEY_PATH" -o StrictHostKeyChecking=no -o ConnectTimeout=10 "${SSH_USER}@${UBUNTU_IP}" "echo 'SSH Connection Successful'"
-            
+        stage ('Deploy') {
+            steps{
+                sshagent(credentials : ['ubuntu-ssh']) {
+                     sh """
+                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime"echo 'SSH Connection Successful'"
+                        ssh -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} "ls -lrt"
                         docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                         docker stop ${CONTAINER_NAME} || true &&
                         docker rm ${CONTAINER_NAME} || true &&
                         docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        echo "Deployment successful
-               """
+                        echo "Deployment successful"
+                """
+                }
             }
         }
         
