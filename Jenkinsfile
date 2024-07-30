@@ -67,14 +67,8 @@ pipeline {
                     remote.host = '172.17.0.3'
                     remote.allowAnyHosts = true
 
-            // Use credentials securely
-                    withCredentials([usernamePassword(credentialsId: 'ubuntu-ssh', passwordVariable: '${SSH_PASSWORD}', usernameVariable: '${SSH_USER}')]) {
-                        remote.user = userName
-                        remote.password = password
-
                 // Use the sshCommand step to run commands on the remote server
                         sshCommand remote: remote, command: "whoami"
-
                         sshCommand remote: remote, command: """
                             docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
                             docker stop ${CONTAINER_NAME} || true &&
