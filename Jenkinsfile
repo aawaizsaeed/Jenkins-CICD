@@ -64,7 +64,23 @@ pipeline {
                                 sshTransfer(
                                     sourceFiles: '',
                                     remoteDirectory: '',
-                                    execCommand: 'echo "Hello, World!"'
+                                     execCommand: """
+                                echo "Pulling Docker image..."
+                                docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                                
+                                echo "Stopping existing container..."
+                                docker stop ${CONTAINER_NAME} || true &&
+                                
+                                echo "Removing existing container..."
+                                docker rm ${CONTAINER_NAME} || true &&
+                                
+                                echo "Running new container..."
+                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                                
+                                echo "Deployment successful"
+                            """,
+                            usePromotionTimestamp: false,
+                            verbose: true
                                 )
                             ],
                             usePromotionTimestamp: false,
