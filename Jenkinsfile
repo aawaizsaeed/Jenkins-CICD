@@ -59,7 +59,7 @@ pipeline {
                 sshPublisher(
                     publishers: [
                         sshPublisherDesc(
-                            configName: 'ubuntu-ssh',  // Configuration name for SSH (defined below)
+                            configName: 'ubuntu-ssh	',  // Configuration name for SSH (defined below)
                             transfers: [
                                 sshTransfer(
                                     sourceFiles: '',
