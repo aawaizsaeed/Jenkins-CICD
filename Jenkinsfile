@@ -61,8 +61,8 @@ pipeline {
                     def remote = [:]
                     remote.name = 'server'
                     remote.host = '172.19.0.3'
-                    remote.user = '${SSH_USER}'
-                    remote.password = '${SSH_PASSWORD}' // Ensure this is securely managed
+                    remote.user = 'SSH_USER'
+                    remote.password = 'SSH_PASSWORD' // Ensure this is securely managed
                     remote.allowAnyHosts = true
 
                     // Use the sshCommand step to run commands on the remote server
