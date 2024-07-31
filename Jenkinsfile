@@ -75,7 +75,7 @@ pipeline {
                                 docker rm ${CONTAINER_NAME} || true &&
                                 
                                 echo "Running new container..."
-                                docker run -d --name ${CONTAINER_NAME} -p 6000:90 ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER} &&
+                                docker run -d --name ${CONTAINER_NAME} -p 6000:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest-${env.BUILD_NUMBER} &&
                                 
                                 echo "Deployment successful"
                             """,
