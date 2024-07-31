@@ -54,18 +54,12 @@ pipeline {
                 }
             }
         }
-        stage ('Deploy') {
-            steps{
-                sshagent(credentials : ['ssh_id']) {
-
-                     sh 'ssh -vT -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
-                     sh """
-                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        docker stop ${CONTAINER_NAME} || true &&
-                        docker rm ${CONTAINER_NAME} || true &&
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        echo "Deployment successful"
-                """
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['ssh_id']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no root@172.17.0.3 "uptime"
+                    '''
                 }
             }
         }
