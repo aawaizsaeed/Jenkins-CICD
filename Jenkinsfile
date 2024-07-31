@@ -56,7 +56,7 @@ pipeline {
         }
         stage ('Deploy') {
             steps{
-                sshagent(credentials : ['	my-ssh-config']) {
+                sshagent(credentials : ['ssh_id']) {
 
                      sh 'ssh -vT -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
                      sh """
