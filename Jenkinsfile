@@ -54,19 +54,24 @@ pipeline {
                 }
             }
         }
-        stage ('Deploy') {
-            steps{
-                sshagent(credentials : ['ubuntu-ssh']) {
-
-                     sh 'ssh -vT -o StrictHostKeyChecking=no ${SSH_USER}@${UBUNTU_IP} uptime'
-                     sh """
-                        docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        docker stop ${CONTAINER_NAME} || true &&
-                        docker rm ${CONTAINER_NAME} || true &&
-                        docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
-                        echo "Deployment successful"
-                """
-                }
+        stage('SSH to Remote Machine') {
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'ubuntu-ssh',  // Configuration name for SSH (defined below)
+                            transfers: [
+                                sshTransfer(
+                                    sourceFiles: '',
+                                    remoteDirectory: '',
+                                    execCommand: 'echo "Hello, World!"'
+                                )
+                            ],
+                            usePromotionTimestamp: false,
+                            verbose: true
+                        )
+                    ]
+                )
             }
         }
     }
