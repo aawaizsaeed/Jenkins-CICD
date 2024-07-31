@@ -95,7 +95,7 @@ pipeline {
     post {
         always {
             // Clean up Docker images (optional)
-            sh 'docker image prune -af'
+            cleanWs()
         }
     }
 }
