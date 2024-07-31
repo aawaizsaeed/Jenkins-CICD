@@ -66,7 +66,7 @@ pipeline {
                                     remoteDirectory: '',
                                      execCommand: """
                                 echo "Pulling Docker image..."
-                                docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                                docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER} &&
                                 
                                 echo "Stopping existing container..."
                                 docker stop ${CONTAINER_NAME} || true &&
@@ -75,7 +75,7 @@ pipeline {
                                 docker rm ${CONTAINER_NAME} || true &&
                                 
                                 echo "Running new container..."
-                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${imageTag} &&
+                                docker run -d --name ${CONTAINER_NAME} -p 80:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${env.BUILD_NUMBER} &&
                                 
                                 echo "Deployment successful"
                             """,
